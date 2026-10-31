@@ -1,0 +1,342 @@
+<div class="rmd-root" aria-busy="{{busy}}">
+  <header class="rmd-header">
+    <div>
+      <h1>Runyth Module Diagnostics</h1>
+      <p>Collect reproducible evidence, inspect selected packages, and export privacy-aware issue reports.</p>
+    </div>
+    <div class="rmd-capture-badge {{#if focusedActive}}is-active{{/if}}">
+      <span class="rmd-status-dot" aria-hidden="true"></span>
+      {{#if focusedActive}}Focused capture active{{else}}{{#if captureState.backgroundEnabled}}Background runtime errors{{else}}Capture idle{{/if}}{{/if}}
+    </div>
+  </header>
+
+  <nav class="rmd-tabs" role="tablist" aria-label="Diagnostics sections">
+    <button type="button" class="{{#if isCaptureTab}}is-active{{/if}}" data-rmd-action="switch-tab" data-tab="capture" role="tab" aria-selected="{{isCaptureTab}}">Capture</button>
+    <button type="button" class="{{#if isScansTab}}is-active{{/if}}" data-rmd-action="switch-tab" data-tab="scans" role="tab" aria-selected="{{isScansTab}}">Scans</button>
+    <button type="button" class="{{#if isGuidanceTab}}is-active{{/if}}" data-rmd-action="switch-tab" data-tab="guidance" role="tab" aria-selected="{{isGuidanceTab}}">Guidance</button>
+    <button type="button" class="{{#if isReportTab}}is-active{{/if}}" data-rmd-action="switch-tab" data-tab="report" role="tab" aria-selected="{{isReportTab}}">Report</button>
+    {{#if isGM}}<button type="button" class="{{#if isAccessTab}}is-active{{/if}}" data-rmd-action="switch-tab" data-tab="access" role="tab" aria-selected="{{isAccessTab}}">{{localize "RMD.Access.Tab"}}</button>{{/if}}
+  </nav>
+
+  <main class="rmd-main">
+    {{#if showBusyBanner}}
+      <div class="rmd-busy-banner" role="status" aria-live="polite">
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+        <span>{{busyLabel}}</span>
+      </div>
+    {{/if}}
+    {{#if isCaptureTab}}
+      <section class="rmd-panel rmd-capture-layout">
+        <aside class="rmd-module-picker">
+          <div class="rmd-section-heading">
+            <div>
+              <h2>Module selection</h2>
+              <p><strong data-rmd-selected-count>{{selectedCount}}</strong> active modules selected</p>
+            </div>
+            <div class="rmd-inline-actions">
+              <button type="button" data-rmd-action="select-all" {{#if busy}}disabled{{/if}}>All</button>
+              <button type="button" data-rmd-action="select-none" {{#if busy}}disabled{{/if}}>None</button>
+            </div>
+          </div>
+          <label class="rmd-search">
+            <span class="sr-only">Filter modules</span>
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" name="moduleSearch" value="{{moduleSearch}}" placeholder="Filter by name or ID">
+          </label>
+          <div class="rmd-module-list" role="group" aria-label="Active modules">
+            {{#each modules}}
+              <label class="rmd-module-row" data-module-filter-text="{{title}} {{id}}" {{#unless visible}}hidden{{/unless}}>
+                <input type="checkbox" name="selectedModules" value="{{id}}" {{#if checked}}checked{{/if}} {{#if ../busy}}disabled{{/if}}>
+                <span>
+                  <strong>{{title}}</strong>
+                  <small>{{id}} · {{version}}</small>
+                </span>
+              </label>
+            {{/each}}
+          </div>
+        </aside>
+
+        <div class="rmd-evidence-column">
+          <section class="rmd-control-card">
+            {{#if isAuthorizedPlayer}}
+              <div class="rmd-player-notice">
+                <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+                <span>{{localize "RMD.Access.PlayerNotice"}}</span>
+              </div>
+            {{/if}}
+            <div>
+              <h2>Evidence capture</h2>
+              <p>Start immediately before reproducing the problem. Selected mode records matching package paths plus optionally unattributed events.</p>
+            </div>
+            <label class="rmd-checkbox-inline">
+              <input type="checkbox" name="includeUnknown" {{#if includeUnknownEntries}}checked{{/if}} {{#if busy}}disabled{{/if}}>
+              Include unattributed entries
+            </label>
+            <div class="rmd-button-row">
+              <button type="button" class="rmd-primary" data-rmd-action="start-selected" {{#unless hasSelection}}disabled{{else}}{{#if busy}}disabled{{/if}}{{/unless}}><i class="fa-solid fa-record-vinyl" aria-hidden="true"></i><span>Capture selected</span></button>
+              <button type="button" data-rmd-action="start-all" {{#if busy}}disabled{{/if}}>Capture all</button>
+              <button type="button" data-rmd-action="stop-capture" {{#unless focusedActive}}disabled{{/unless}}>Stop</button>
+              <button type="button" data-rmd-action="clear-capture" {{#if busy}}disabled{{/if}}>Clear</button>
+            </div>
+            <div class="rmd-metrics">
+              <span><strong>{{captureState.size}}</strong> stored</span>
+              <span><strong>{{captureState.dropped}}</strong> discarded</span>
+              <span><strong>{{captureState.limit}}</strong> limit</span>
+            </div>
+          </section>
+
+          <section class="rmd-log-card">
+            <div class="rmd-section-heading">
+              <div>
+                <h2>Recent evidence</h2>
+                <p>Latest 200 visible; all retained matching entries are available to reports.</p>
+              </div>
+            </div>
+            {{#if hasEntries}}
+              <div class="rmd-log-list">
+                {{#each captureEntries}}
+                  <article class="rmd-log-entry {{levelClass}}">
+                    <header>
+                      <span class="rmd-level">{{level}}</span>
+                      <strong>{{packageLabel}}</strong>
+                      <time>{{timestamp}}</time>
+                    </header>
+                    <p>{{message}}</p>
+                    {{#if hasStack}}<pre>{{stack}}{{location}}</pre>{{/if}}
+                    <small>{{attribution.note}}</small>
+                  </article>
+                {{/each}}
+              </div>
+            {{else}}
+              <div class="rmd-empty-state">
+                <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+                <p>No evidence has been captured yet.</p>
+              </div>
+            {{/if}}
+          </section>
+        </div>
+      </section>
+    {{/if}}
+
+    {{#if isScansTab}}
+      <section class="rmd-panel">
+        <div class="rmd-section-heading">
+          <div>
+            <h2>Compatibility and interference scans</h2>
+            <p>Scans operate only on the currently selected active modules. Static matches are review hints, not verdicts.</p>
+          </div>
+          <button type="button" class="rmd-primary" data-rmd-action="run-all-scans" {{#unless hasSelection}}disabled{{else}}{{#if busy}}disabled{{/if}}{{/unless}}><i class="fa-solid fa-play" aria-hidden="true"></i><span>Run all scans</span></button>
+        </div>
+
+        <div class="rmd-scan-progress-shell {{#if scanBusy}}is-active{{/if}}" role="status" aria-live="polite" aria-atomic="true" aria-busy="{{scanBusy}}">
+          <div class="rmd-scan-progress-heading">
+            <span class="rmd-scan-progress-state">
+              {{#if scanBusy}}<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>{{else}}{{#if hasPreviousScanProgress}}<i class="fa-solid fa-circle-check" aria-hidden="true"></i>{{else}}<i class="fa-solid fa-gauge-high" aria-hidden="true"></i>{{/if}}{{/if}}
+              <strong data-rmd-scan-progress-label>{{scanProgress.label}}</strong>
+            </span>
+            <span class="rmd-scan-progress-percent" data-rmd-scan-progress-percent>{{scanProgress.percent}}%</span>
+          </div>
+          <progress data-rmd-scan-progress max="100" value="{{scanProgress.percent}}" aria-label="Diagnostics scan progress">{{scanProgress.percent}}%</progress>
+          <small data-rmd-scan-progress-detail>{{scanProgress.detail}}</small>
+        </div>
+
+        <div class="rmd-scan-grid">
+          {{#each scanCards}}
+            <article class="rmd-scan-card">
+              <h3>{{title}}</h3>
+              <p>{{description}}</p>
+              {{#if hasResult}}
+                <div class="rmd-scan-result"><strong>{{findingCount}}</strong> findings {{#if truncated}}(bounded result){{/if}}</div>
+                {{#if hasPreviewFindings}}
+                  <details class="rmd-scan-preview">
+                    <summary>View first findings</summary>
+                    <ul>
+                      {{#each previewFindings}}
+                        <li><span class="rmd-severity rmd-severity-{{severity}}">{{severity}}</span> {{#if moduleId}}<code>{{moduleId}}</code>: {{/if}}{{message}}</li>
+                      {{/each}}
+                    </ul>
+                  </details>
+                {{/if}}
+              {{else}}
+                <div class="rmd-scan-result is-pending">Not run</div>
+              {{/if}}
+              <button type="button" data-rmd-action="run-scan" data-scan="{{action}}" {{#if disabled}}disabled{{/if}}>Run scan</button>
+            </article>
+          {{/each}}
+        </div>
+        <details class="rmd-disclosure">
+          <summary>How source scans remain bounded</summary>
+          <p>Only manifest-declared same-origin scripts, styles, and language files up to 2 MB are inspected. Source text is kept only in memory for scanning and is not included in reports.</p>
+        </details>
+      </section>
+    {{/if}}
+
+    {{#if isGuidanceTab}}
+      <section class="rmd-panel">
+        <div class="rmd-section-heading">
+          <div>
+            <h2>Known issue guidance</h2>
+            <p>Use these explanations to turn console symptoms into focused reproduction and source-review steps.</p>
+          </div>
+        </div>
+        <div class="rmd-guidance-list">
+          {{#each knownIssues}}
+            <details class="rmd-guidance-card">
+              <summary><span class="rmd-severity rmd-severity-{{severity}}">{{severity}}</span> {{title}}</summary>
+              <p>{{summary}}</p>
+              <h4>Checks</h4>
+              <ul>
+                {{#each checks}}<li>{{this}}</li>{{/each}}
+              </ul>
+            </details>
+          {{/each}}
+        </div>
+      </section>
+    {{/if}}
+
+    {{#if isReportTab}}
+      <section class="rmd-panel rmd-report-layout">
+        <div class="rmd-report-form">
+          <div class="rmd-section-heading">
+            <div>
+              <h2>Issue report details</h2>
+              <p>These details become the issue-tracker-ready Markdown overview inside the ZIP.</p>
+            </div>
+          </div>
+          <label>
+            <span>Problem summary</span>
+            <textarea name="summary" rows="3" {{#if busy}}disabled{{/if}} placeholder="What fails, freezes, overlaps, or behaves incorrectly?">{{reportInput.summary}}</textarea>
+          </label>
+          <label>
+            <span>Exact reproduction steps</span>
+            <textarea name="steps" rows="6" {{#if busy}}disabled{{/if}} placeholder="1. Open...&#10;2. Select...&#10;3. Observe...">{{reportInput.steps}}</textarea>
+          </label>
+          <div class="rmd-two-column">
+            <label>
+              <span>Expected result</span>
+              <textarea name="expected" rows="3" {{#if busy}}disabled{{/if}}>{{reportInput.expected}}</textarea>
+            </label>
+            <label>
+              <span>Actual result</span>
+              <textarea name="actual" rows="3" {{#if busy}}disabled{{/if}}>{{reportInput.actual}}</textarea>
+            </label>
+          </div>
+          <label class="rmd-checkbox-inline">
+            <input type="checkbox" name="includeAllPackages" {{#if includeAllPackages}}checked{{/if}} {{#if busy}}disabled{{/if}}>
+            Include complete installed module inventory, not only selected active modules
+          </label>
+          {{#if hasFocusedSession}}
+            <label class="rmd-checkbox-inline">
+              <input type="checkbox" name="limitToFocusedSession" {{#if limitToFocusedSession}}checked{{/if}} {{#if busy}}disabled{{/if}}>
+              Limit evidence to focused capture session #{{latestFocusedSession.id}} ({{latestFocusedSession.retainedEntries}} retained entries)
+            </label>
+          {{/if}}
+          <fieldset class="rmd-level-picker">
+            <legend>Include evidence levels</legend>
+            {{#each levels}}
+              <label><input type="checkbox" name="reportLevels" value="{{level}}" {{#if checked}}checked{{/if}} {{#if ../busy}}disabled{{/if}}> {{level}}</label>
+            {{/each}}
+          </fieldset>
+          <label>
+            <span>Additional exact terms to redact</span>
+            <textarea name="customRedactions" rows="3" {{#if busy}}disabled{{/if}} placeholder="One sensitive value per line">{{reportInput.customRedactions}}</textarea>
+          </label>
+        </div>
+
+        <aside class="rmd-report-sidebar">
+          <section class="rmd-control-card">
+            <h2>Imported evidence</h2>
+            <p>Optionally add exported console text or Foundry server-log excerpts. Maximum 5 MB per file.</p>
+            <input id="rmd-import-file" type="file" accept=".txt,.log,.json,.jsonl,.md,text/plain,application/json" hidden>
+            <button type="button" data-rmd-action="choose-import" {{#if busy}}disabled{{/if}}><i class="fa-solid fa-file-import" aria-hidden="true"></i><span>Import evidence file</span></button>
+            {{#if hasImportedFiles}}
+              <ul class="rmd-import-list">
+                {{#each importedFiles}}
+                  <li><span><strong>{{name}}</strong><small>{{formattedSize}}</small></span><button type="button" data-rmd-action="remove-import" data-filename="{{name}}" aria-label="Remove {{name}}" {{#if ../busy}}disabled{{/if}}><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></li>
+                {{/each}}
+              </ul>
+              <button type="button" data-rmd-action="clear-imports" {{#if busy}}disabled{{/if}}>Clear imports</button>
+            {{/if}}
+          </section>
+
+          <section class="rmd-warning-card">
+            <h2>Privacy review required</h2>
+            <p>Automatic redaction covers common secrets, query credentials, origins, and IP addresses, but cannot identify every private value. Review the ZIP before uploading it.</p>
+          </section>
+
+          <section class="rmd-limitations-card">
+            <h2>Evidence boundaries</h2>
+            <ul>{{#each limitations}}<li>{{this}}</li>{{/each}}</ul>
+          </section>
+
+          <button type="button" class="rmd-primary rmd-export-button" data-rmd-action="export-report" {{#if busy}}disabled{{/if}}><i class="fa-solid fa-file-zipper" aria-hidden="true"></i><span>Export report ZIP</span></button>
+        </aside>
+      </section>
+    {{/if}}
+
+    {{#if isAccessTab}}
+      <section class="rmd-panel rmd-access-layout">
+        <section class="rmd-control-card rmd-access-card">
+          <div class="rmd-section-heading">
+            <div>
+              <h2>{{localize "RMD.Access.Title"}}</h2>
+              <p>{{localize "RMD.Access.Description"}}</p>
+            </div>
+            <span class="rmd-access-count"><strong data-rmd-access-selected-count>{{accessSelectedCount}}</strong> {{localize "RMD.Access.Selected"}}</span>
+          </div>
+
+          <label class="rmd-search">
+            <span class="sr-only">{{localize "RMD.Access.FilterLabel"}}</span>
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" name="accessSearch" value="{{accessSearch}}" placeholder="{{localize "RMD.Access.FilterPlaceholder"}}">
+          </label>
+
+          {{#if hasAccessUsers}}
+            <div class="rmd-user-list" role="group" aria-label="{{localize "RMD.Access.UserListLabel"}}">
+              {{#each accessUsers}}
+                <label class="rmd-user-row" data-user-filter-text="{{name}} {{id}}" {{#unless visible}}hidden{{/unless}}>
+                  <input type="checkbox" name="allowedUsers" value="{{id}}" {{#if checked}}checked{{/if}} {{#if ../busy}}disabled{{/if}}>
+                  <span class="rmd-user-identity">
+                    <strong>{{name}}</strong>
+                    <small>{{id}}</small>
+                  </span>
+                  <span class="rmd-user-status {{#if active}}is-online{{/if}}">
+                    <i class="fa-solid fa-circle" aria-hidden="true"></i>
+                    {{#if active}}{{localize "RMD.Access.Online"}}{{else}}{{localize "RMD.Access.Offline"}}{{/if}}
+                  </span>
+                </label>
+              {{/each}}
+            </div>
+          {{else}}
+            <div class="rmd-empty-state">
+              <i class="fa-solid fa-users-slash" aria-hidden="true"></i>
+              <p>{{localize "RMD.Access.NoPlayers"}}</p>
+            </div>
+          {{/if}}
+
+          <div class="rmd-button-row rmd-access-actions">
+            <button type="button" data-rmd-action="access-select-all" {{#if busy}}disabled{{/if}}>{{localize "RMD.Access.SelectAll"}}</button>
+            <button type="button" data-rmd-action="access-select-none" {{#if busy}}disabled{{/if}}>{{localize "RMD.Access.SelectNone"}}</button>
+            <button type="button" class="rmd-primary" data-rmd-action="save-player-access" {{#if busy}}disabled{{/if}}><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i><span>{{localize "RMD.Access.Save"}}</span></button>
+          </div>
+        </section>
+
+        <aside class="rmd-access-sidebar">
+          <section class="rmd-control-card">
+            <h2>{{localize "RMD.Access.HowItWorksTitle"}}</h2>
+            <ul>
+              <li>{{localize "RMD.Access.HowItWorksOwnClient"}}</li>
+              <li>{{localize "RMD.Access.HowItWorksNoUpload"}}</li>
+              <li>{{localize "RMD.Access.HowItWorksImmediate"}}</li>
+              <li>{{localize "RMD.Access.HowItWorksGmAlways"}}</li>
+            </ul>
+          </section>
+          <section class="rmd-warning-card">
+            <h2>{{localize "RMD.Access.PrivacyTitle"}}</h2>
+            <p>{{localize "RMD.Access.PrivacyText"}}</p>
+          </section>
+        </aside>
+      </section>
+    {{/if}}
+  </main>
+</div>

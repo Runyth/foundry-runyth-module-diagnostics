@@ -1,0 +1,63 @@
+{
+  "RMD": {
+    "Title": "Runyth-Moduldiagnose",
+    "Menu": {
+      "Name": "Moduldiagnose",
+      "Label": "Diagnoseübersicht öffnen",
+      "Hint": "Begrenzte clientseitige Belege erfassen, Pakete prüfen, Kompatibilitätsscans ausführen und bereinigte Berichte exportieren. Spielleitungen haben immer Zugriff; ausgewählten Spielern kann eine eigene Clientdiagnose erlaubt werden."
+    },
+    "Settings": {
+      "BackgroundCapture": {
+        "Name": "Laufzeitfehler im Hintergrund erfassen",
+        "Hint": "Erfasst nach dem Start begrenzte Browser- und Laufzeitfehler. Konsolenmethoden werden nur während einer fokussierten Erfassung abgefangen; bereits vorhandene Browserkonsolen-Historie kann nicht wiederhergestellt werden."
+      },
+      "MaxEntries": {
+        "Name": "Maximale Anzahl erfasster Einträge",
+        "Hint": "Die ältesten Einträge werden verworfen, sobald dieser clientseitige Ringpuffer voll ist."
+      },
+      "CaptureLongTasks": {
+        "Name": "Lange Aufgaben erfassen",
+        "Hint": "Erfasst Browser-Long-Task-Leistungsdaten, sofern unterstützt."
+      },
+      "CustomRedactions": {
+        "Name": "Zusätzliche exakte Schwärzungsbegriffe",
+        "Hint": "Ein vertraulicher Begriff pro Zeile. Begriffe werden in exportierten Berichten ersetzt."
+      }
+    },
+    "Notifications": {
+      "CaptureStarted": "Fokussierte Diagnoseerfassung gestartet.",
+      "CaptureStopped": "Fokussierte Diagnoseerfassung beendet.",
+      "CaptureCleared": "Erfasste Belege gelöscht.",
+      "ReportExported": "Diagnosebericht exportiert: {filename}",
+      "ImportTooLarge": "Die ausgewählte Belegdatei überschreitet die Grenze von 5 MB.",
+      "ImportFailed": "Die Belegdatei konnte nicht importiert werden.",
+      "SelectModuleFirst": "Wähle zuerst mindestens ein aktives Modul aus.",
+      "NotAuthorized": "Runyth-Moduldiagnose ist für deinen Foundry-Benutzer nicht freigeschaltet. Bitte die Spielleitung um Diagnosezugriff.",
+      "GmOnlyAccess": "Nur eine Spielleitung kann den Spielerzugriff auf die Diagnose ändern.",
+      "AccessSaved": "Spielerzugriff auf die Diagnose für {count} Benutzer gespeichert."
+    },
+    "Access": {
+      "Tab": "Zugriff",
+      "Title": "Spielerzugriff auf die Diagnose",
+      "Description": "Wähle die Benutzer ohne SL-Rolle aus, die Runyth-Moduldiagnose öffnen und Belege aus ihrem eigenen Browser-Client erfassen dürfen.",
+      "Selected": "Spieler zugelassen",
+      "FilterLabel": "Spieler filtern",
+      "FilterPlaceholder": "Nach Spielername oder Benutzer-ID filtern",
+      "UserListLabel": "Auswählbare Foundry-Benutzer",
+      "Online": "Online",
+      "Offline": "Offline",
+      "NoPlayers": "In dieser Welt sind keine Foundry-Benutzer ohne SL-Rolle verfügbar.",
+      "SelectAll": "Alle Spieler zulassen",
+      "SelectNone": "Niemanden zulassen",
+      "Save": "Spielerzugriff speichern",
+      "PlayerNotice": "Spielerdiagnose: Belege, Importe, Scans und Berichte bleiben in diesem Browser, bis du ausdrücklich eine Berichts-ZIP exportierst und weitergibst.",
+      "HowItWorksTitle": "So funktioniert der Spielerzugriff",
+      "HowItWorksOwnClient": "Jeder zugelassene Spieler hat einen unabhängigen Belegpuffer im Arbeitsspeicher sowie clientlokale Fenster- und Einstellungsdaten.",
+      "HowItWorksNoUpload": "Das Modul sendet Spielerdiagnosen nicht automatisch an die Spielleitung, einen Server-Endpunkt oder Dritte.",
+      "HowItWorksImmediate": "Zugriffsänderungen gelten für verbundene Clients, sobald die Welteinstellung synchronisiert wurde; falls Foundry die Einstellung noch nicht aktualisiert hat, ist ein Browser-Neuladen die sichere Ausweichlösung.",
+      "HowItWorksGmAlways": "Spielleitungen behalten immer Diagnosezugriff und können sich über diese Liste nicht selbst aussperren.",
+      "PrivacyTitle": "Zugriff mit minimalen Rechten",
+      "PrivacyText": "Zugelassene Spieler erhalten den Diagnoseablauf, aber keine SL-Rechte. Sie können diese Zugriffsliste nicht über die Übersicht ändern."
+    }
+  }
+}

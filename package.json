@@ -1,0 +1,25 @@
+{
+  "name": "runyth-module-diagnostics",
+  "version": "1.1.1",
+  "private": true,
+  "type": "module",
+  "description": "Production-quality diagnostics and evidence collection for Foundry Virtual Tabletop modules.",
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Runyth/foundry-runyth-module-diagnostics.git"
+  },
+  "engines": {
+    "node": ">=22.13.0 <27"
+  },
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "clean": "node tools/clean.mjs",
+    "package": "node tools/package.mjs",
+    "validate": "node tools/validate.mjs",
+    "test": "node --test",
+    "check": "npm run clean && npm run test && npm run build && npm run validate && npm run package",
+    "check:determinism": "node tools/check-determinism.mjs"
+  },
+  "devDependencies": {}
+}

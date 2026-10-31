@@ -1,0 +1,63 @@
+{
+  "RMD": {
+    "Title": "Runyth Module Diagnostics",
+    "Menu": {
+      "Name": "Module Diagnostics",
+      "Label": "Open diagnostics dashboard",
+      "Hint": "Collect bounded client-side evidence, inspect packages, run compatibility scans, and export redacted reports. Game Masters always have access; selected players can be granted their own client diagnostics."
+    },
+    "Settings": {
+      "BackgroundCapture": {
+        "Name": "Capture background runtime errors",
+        "Hint": "Records bounded browser/runtime error evidence after startup. Console method interception is enabled only during focused capture; existing browser-console history cannot be recovered."
+      },
+      "MaxEntries": {
+        "Name": "Maximum captured entries",
+        "Hint": "Oldest entries are discarded when this client-side ring buffer is full."
+      },
+      "CaptureLongTasks": {
+        "Name": "Capture long tasks",
+        "Hint": "Records browser long-task performance entries where supported."
+      },
+      "CustomRedactions": {
+        "Name": "Additional exact redaction terms",
+        "Hint": "One sensitive term per line. Terms are replaced in exported reports."
+      }
+    },
+    "Notifications": {
+      "CaptureStarted": "Focused diagnostics capture started.",
+      "CaptureStopped": "Focused diagnostics capture stopped.",
+      "CaptureCleared": "Captured evidence cleared.",
+      "ReportExported": "Diagnostics report exported: {filename}",
+      "ImportTooLarge": "The selected evidence file exceeds the 5 MB limit.",
+      "ImportFailed": "The evidence file could not be imported.",
+      "SelectModuleFirst": "Select at least one active module first.",
+      "NotAuthorized": "Runyth Module Diagnostics is not enabled for your Foundry user. Ask the Game Master to grant player diagnostics access.",
+      "GmOnlyAccess": "Only a Game Master can change player diagnostics access.",
+      "AccessSaved": "Player diagnostics access saved for {count} user(s)."
+    },
+    "Access": {
+      "Tab": "Access",
+      "Title": "Player diagnostics access",
+      "Description": "Choose the non-GM users who may open Runyth Module Diagnostics and collect evidence from their own browser client.",
+      "Selected": "players allowed",
+      "FilterLabel": "Filter players",
+      "FilterPlaceholder": "Filter by player name or user ID",
+      "UserListLabel": "Selectable Foundry users",
+      "Online": "Online",
+      "Offline": "Offline",
+      "NoPlayers": "No non-GM Foundry users are available in this world.",
+      "SelectAll": "Allow all players",
+      "SelectNone": "Allow none",
+      "Save": "Save player access",
+      "PlayerNotice": "Player diagnostics mode: evidence, imports, scans, and reports stay in this browser unless you explicitly export and send a report ZIP.",
+      "HowItWorksTitle": "How player access works",
+      "HowItWorksOwnClient": "Each authorized player has an independent in-memory evidence buffer and client-local window/settings state.",
+      "HowItWorksNoUpload": "The module does not send player diagnostics to the Game Master, a server endpoint, or a third party automatically.",
+      "HowItWorksImmediate": "Access changes apply to connected clients when the world setting synchronizes; a browser reload is a safe fallback if Foundry has not refreshed the setting yet.",
+      "HowItWorksGmAlways": "Game Masters always retain diagnostics access and cannot lock themselves out with this list.",
+      "PrivacyTitle": "Least-privilege access",
+      "PrivacyText": "Authorized players receive the diagnostics workflow, not Game Master privileges. They cannot change this access list through the dashboard."
+    }
+  }
+}
