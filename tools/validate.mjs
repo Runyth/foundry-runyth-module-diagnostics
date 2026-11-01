@@ -176,7 +176,7 @@ if (errors.length === 0) {
 
   const composed = (...parts) => parts.join("");
   const licenceLine = `Copyright © 2026  [Daniel ${composed("Branie", "wski")}](https://brani.dev/)`;
-  const holderFragment = composed("// Copyright (C) 2026 Daniel ", "Braniewski. See the LICENSE file for rights and obligations.");
+  const holderFragment = composed("// Copyright (C) 2026 Daniel ", "Brani", "ewski. See the LICENSE file for rights and obligations.");
   const identityPatterns = [
     new RegExp(composed("aki", "to"), "iu"),
     new RegExp(composed("Branie", "wski"), "iu"),
