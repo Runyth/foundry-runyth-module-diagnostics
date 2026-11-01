@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -23,6 +23,7 @@ export async function listFiles(directory, base = directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const output = [];
   for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (entry.name === ".git") continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) output.push(...await listFiles(absolute, base));
     else if (entry.isFile()) output.push(path.relative(base, absolute).replaceAll(path.sep, "/"));

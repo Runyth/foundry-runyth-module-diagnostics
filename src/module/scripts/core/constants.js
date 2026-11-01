@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 export const MODULE_ID = "runyth-module-diagnostics";
 export const MODULE_TITLE = "Runyth Module Diagnostics";
-export const MODULE_VERSION = "1.1.1";
+export const MODULE_VERSION = "1.1.2";
 
 export const CAPTURE_LEVELS = Object.freeze(["debug", "info", "log", "warn", "error"]);
 export const DEFAULT_MAX_ENTRIES = 2_000;

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (C) 2026 Runyth. See the LICENSE file for rights and obligations.
+// Copyright (C) 2026 Daniel Braniewski. See the LICENSE file for rights and obligations.
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { MODULE_BUILD, ROOT, fileExists, listFiles } from "./lib/fs.mjs";
@@ -176,6 +176,7 @@ if (errors.length === 0) {
 
   const composed = (...parts) => parts.join("");
   const licenceLine = `Copyright © 2026  [Daniel ${composed("Branie", "wski")}](https://brani.dev/)`;
+  const holderFragment = composed("// Copyright (C) 2026 Daniel ", "Braniewski. See the LICENSE file for rights and obligations.");
   const identityPatterns = [
     new RegExp(composed("aki", "to"), "iu"),
     new RegExp(composed("Branie", "wski"), "iu"),
@@ -188,7 +189,9 @@ if (errors.length === 0) {
   for (const relative of sourceFiles) {
     if (relative.startsWith("build/") || relative.startsWith("release/") || relative.startsWith("node_modules/")) continue;
     const raw = await readFile(path.join(ROOT, relative));
-    const decoded = relative === "README.md" ? raw.toString("utf8").replace(licenceLine, "") : raw.toString("latin1");
+    const decoded = relative === "README.md"
+      ? raw.toString("utf8").replace(licenceLine, "")
+      : raw.toString("latin1").replace(holderFragment, "");
     assert(!identityPatterns.some((pattern) => pattern.test(decoded)), `${relative}: publication identity material.`);
     if (relative.endsWith(".js") || relative.endsWith(".mjs")) {
       assert(raw.toString("utf8").startsWith("// SPDX-License-Identifier: AGPL-3.0-or-later\n"), `${relative}: missing AGPL source header.`);

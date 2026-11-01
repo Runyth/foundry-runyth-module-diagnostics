@@ -1,6 +1,6 @@
 {
   "name": "runyth-module-diagnostics",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "type": "module",
   "description": "Production-quality diagnostics and evidence collection for Foundry Virtual Tabletop modules.",
