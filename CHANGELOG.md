@@ -1,34 +1,24 @@
 # Changelog
 
-## 1.1.2 - 2026-11-01
-
-### Fixed
+## 1.1.2 — 2026-11-01
 
 - Attributed the source licence headers to the same holder the README Licence chapter names so every module surface carries the same copyright holder.
 
-All notable changes are documented here. Versions follow Semantic Versioning.
+- All notable changes are documented here. Versions follow Semantic Versioning.
 
 ## 1.1.1 — 2026-08-12
 
-### Published
-
 - Licensed the program under AGPL-3.0-or-later.
 - Published install, source, and documentation archives as `-mod`, `-src`, and `-doc`.
-
-### Fixed
 
 - Fixed focused-diagnostics report actions repeatedly failing with `Cannot read properties of undefined (reading 'minimum')` when a selected package snapshot has missing or malformed compatibility metadata.
 - Made issue-tracker Markdown generation tolerant of absent compatibility, environment, evidence, guidance, and scan substructures instead of allowing one malformed snapshot to abort the complete report ZIP.
 - Preserved the underlying diagnostic evidence and represented unavailable compatibility values as `—` rather than fabricating version bounds.
 
-### Validation
-
 - Added a regression test that reproduces the exact `compatibility.minimum` failure with both missing and malformed compatibility metadata.
 - Added a static release gate preventing direct dereferences of optional package compatibility fields in report generation.
 
 ## 1.1.0 — 2026-08-12
-
-### Added
 
 - Added GM-managed per-player diagnostics authorization through a world-scoped access list. Game Masters remain permanently authorized.
 - Added a searchable, scrollable **Access** tab listing non-GM Foundry users with online/offline status, bulk allow/deny controls, and explicit save behavior.
@@ -36,21 +26,15 @@ All notable changes are documented here. Versions follow Semantic Versioning.
 - Added API v2 authorization introspection plus GM-only `getPlayerAccess()` and `setPlayerAccess(userIds)` administration helpers.
 - Added English and German localization for the complete player-access workflow and permission notifications.
 
-### Security and isolation
-
 - Player evidence remains client-local and is never synchronized to the GM or other players; sending a report remains an explicit export-and-share action.
 - Access revocation closes the affected local dashboard, uninstalls capture listeners/observers, restores temporary console wrappers, and discards that client's in-memory diagnostics service instance.
 - Unauthorized clients expose only the minimal API surface required to query authorization and request the dashboard; capture, scan, report, and access mutation methods are not exposed.
 - The GM-only Access tab and administration helpers are protected in the rendered UI, event handler, access service, and public API boundary; player API objects do not expose access-administration methods.
 
-### Validation
-
 - Added regression tests for authorization normalization, GM-always access, non-GM selection, stale/GM ID rejection, world-setting persistence, the shared settings-menu registration model, and the minimal API exposed to unauthorized clients.
 - Expanded the manual acceptance matrix for grant, revoke, reconnect, independent client evidence, and player privilege boundaries.
 
 ## 1.0.2 — 2026-08-09
-
-### Fixed
 
 - Corrected Foundry V13 asset-path normalization so already-rooted package paths such as `modules/example/scripts/main.js` are not incorrectly requested as `modules/example/modules/example/scripts/main.js`.
 - Removed compatibility fallbacks through deprecated pre-V10 core-version fields that could throw while scanning malformed third-party package metadata; relationship scans now use the modern `compatibility` object defensively.
@@ -60,8 +44,6 @@ All notable changes are documented here. Versions follow Semantic Versioning.
 - Removed scan-completion toast notifications that added repeated diagnostics noise to the console during large scan sessions.
 - Removed duplicate click-prevention and progress-label assignments found during the patch audit.
 
-### Added
-
 - Added a permanently reserved, layout-stable scan progress region with stage label, current package/asset detail, percentage, and native progress semantics.
 - Added granular progress reporting to relationship, asset, source, CSS, DOM, and resource scans.
 - Added weighted aggregate progress for the complete six-stage scan suite so asset/source work contributes proportionally to the displayed percentage.
@@ -70,8 +52,6 @@ All notable changes are documented here. Versions follow Semantic Versioning.
 - Added the standard third documentation/audit/test-results ZIP to release packaging.
 
 ## 1.0.1 — 2026-08-09
-
-### Fixed
 
 - Avoided serializing discarded low-level console payloads, reducing overhead and preventing side-effecting getters from being touched when no matching capture is active.
 - Correctly treated `relationships.systems` entries without an explicit type as system relationships instead of module dependencies.
@@ -84,15 +64,11 @@ All notable changes are documented here. Versions follow Semantic Versioning.
 - Kept generated issue-report Markdown valid when captured messages contain backtick code fences.
 - Delayed object-URL revocation after downloads to avoid browser-dependent incomplete exports.
 
-### Changed
-
 - Added explicit busy-state feedback, delayed report generation until the busy state can render, and disabled conflicting controls while diagnostics work is running.
 - Added abort-aware ApplicationV2 lifecycle cleanup, bounded resource timing evidence, and clearer focused/background capture status.
 - Expanded regression coverage from 25 to 31 tests.
 
 ## 1.0.0 — 2026-07-29
-
-### Added
 
 - Game Master-only ApplicationV2 diagnostics dashboard with remembered client window state.
 - Bounded, reversible console capture for debug, info, log, warning, and error levels, including focused-session report boundaries.
